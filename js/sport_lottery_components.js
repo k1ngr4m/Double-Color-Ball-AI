@@ -347,6 +347,129 @@ const SportsLotteryComponents = {
         wrapper.style.fontSize = '0.95rem';
         wrapper.textContent = message;
         return wrapper;
+    },
+
+    createCompoundCard(compound) {
+        const card = document.createElement('div');
+        card.className = 'compound-selection-card';
+
+        const header = document.createElement('div');
+        header.className = 'compound-card-header';
+        header.innerHTML = `
+            <div class="compound-header-left">
+                <div class="compound-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3>AI 复式推荐</h3>
+                    <span class="compound-subtitle">多维度统计分析生成三档复式方案</span>
+                </div>
+            </div>
+        `;
+        card.appendChild(header);
+
+        const tabs = document.createElement('div');
+        tabs.className = 'compound-tabs';
+        compound.types.forEach((type, idx) => {
+            const tab = document.createElement('button');
+            tab.className = 'compound-tab' + (idx === 0 ? ' active' : '');
+            tab.dataset.idx = idx;
+            tab.innerHTML = `<span class="compound-tab-tag">${type.tag}</span>${type.label}`;
+            tab.addEventListener('click', () => {
+                tabs.querySelectorAll('.compound-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                card.querySelectorAll('.compound-type-panel').forEach(p => p.classList.remove('active'));
+                card.querySelector(`.compound-type-panel[data-idx="${idx}"]`).classList.add('active');
+            });
+            tabs.appendChild(tab);
+        });
+        card.appendChild(tabs);
+
+        const panelsWrap = document.createElement('div');
+        panelsWrap.className = 'compound-panels';
+        compound.types.forEach((type, idx) => {
+            const panel = document.createElement('div');
+            panel.className = 'compound-type-panel' + (idx === 0 ? ' active' : '');
+            panel.dataset.idx = idx;
+
+            const ruleBox = document.createElement('div');
+            ruleBox.className = 'compound-rule-box';
+            const basisIcon = type.basis === 'prediction'
+                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>';
+            const basisLabel = type.basis === 'prediction' ? 'AI 模型共识' : '历史数据统计';
+            ruleBox.innerHTML = `
+                <div class="compound-rule-badge">${basisIcon}<span>${basisLabel}</span></div>
+                <p class="compound-rule-text">${type.rule}</p>
+            `;
+            panel.appendChild(ruleBox);
+
+            const content = document.createElement('div');
+            content.className = 'compound-card-content';
+
+            const totalRef = type.basis === 'prediction' ? type.data.totalPredictions : type.data.totalDraws;
+            const redSection = this._createCompoundZone('前区精选', 'red', type.data.red, totalRef, type.basis);
+            content.appendChild(redSection);
+            const blueSection = this._createCompoundZone('后区精选', 'blue', type.data.blue, totalRef, type.basis);
+            content.appendChild(blueSection);
+
+            panel.appendChild(content);
+            panelsWrap.appendChild(panel);
+        });
+        card.appendChild(panelsWrap);
+
+        const footer = document.createElement('div');
+        footer.className = 'compound-card-footer';
+        footer.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+            </svg>
+            <span>5+2 基于 AI 模型预测共识度；6+3 融合热号与冷号双维分析；7+4 采用四维综合评分体系。复式号码仅供参考。</span>
+        `;
+        card.appendChild(footer);
+
+        return card;
+    },
+
+    _createCompoundZone(title, color, balls, totalRef, basis) {
+        const section = document.createElement('div');
+        section.className = 'compound-zone';
+
+        const label = document.createElement('div');
+        label.className = `compound-zone-label ${color}`;
+        label.textContent = title;
+        section.appendChild(label);
+
+        const ballsRow = document.createElement('div');
+        ballsRow.className = 'compound-balls-row';
+
+        balls.forEach(item => {
+            const ballWrap = document.createElement('div');
+            ballWrap.className = 'compound-ball-wrap';
+
+            const ball = document.createElement('div');
+            ball.className = `compound-ball ${color}`;
+            ball.textContent = item.ball;
+            ballWrap.appendChild(ball);
+
+            const freq = document.createElement('div');
+            freq.className = 'compound-ball-freq';
+            freq.textContent = basis === 'prediction' ? `${item.count}/${totalRef}` : `${item.count}期`;
+            ballWrap.appendChild(freq);
+
+            const barRate = basis === 'prediction' ? item.rate : Math.min(100, Math.round(item.count / totalRef * 100 * 3));
+            const bar = document.createElement('div');
+            bar.className = `compound-freq-bar ${color}`;
+            bar.innerHTML = `<div class="compound-freq-bar-fill" style="width: ${barRate}%"></div>`;
+            ballWrap.appendChild(bar);
+
+            ballsRow.appendChild(ballWrap);
+        });
+
+        section.appendChild(ballsRow);
+        return section;
     }
 };
 
