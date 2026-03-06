@@ -1,4 +1,4 @@
-# 双色球开奖与 AI 预测数据展示系统 - Vercel 部署指南
+# 双色球 & 大乐透 AI 预测数据展示系统 - Vercel 部署指南
 
 ## 🚀 部署到 Vercel
 
@@ -64,6 +64,7 @@ git commit -m "Ready for Vercel deployment"
 ✅ 确保项目结构正确：
 ```
 ├── index.html
+├── sport_lottery_index.html
 ├── css/
 │   └── style.css
 ├── js/
@@ -72,7 +73,11 @@ git commit -m "Ready for Vercel deployment"
 │   └── components.js
 ├── data/
 │   ├── lottery_history.json
-│   └── ai_predictions.json
+│   ├── ai_predictions.json
+│   ├── predictions_history.json
+│   ├── sports_lottery_data.json
+│   ├── sport_lottery_ai_predictions.json
+│   └── sport_lottery_predictions_history.json
 ├── vercel.json
 └── .vercelignore
 ```
@@ -107,23 +112,33 @@ vercel --prod
 
 ### 1. 更新历史开奖数据
 
-在本地运行：
+#### 双色球
 ```bash
 cd fetch_history
 python3 fetch_lottery_history.py
 ```
 
-然后更新 `data/lottery_history.json`：
+#### 大乐透
 ```bash
-# 复制并格式化数据
-cp fetch_history/lottery_data.json data/lottery_history.json
+cd fetch_history
+python3 fetch_sports_lottery_history.py
 ```
 
-记得添加 `last_updated` 字段到 JSON 文件。
+数据会自动同步到 `data/` 目录对应的 JSON 文件。
 
 ### 2. 更新 AI 预测数据
 
-编辑 `data/ai_predictions.json` 文件，添加新的预测。
+#### 双色球
+```bash
+python3 generate_ai_prediction.py
+```
+
+#### 大乐透
+```bash
+python3 sport_lottery_generate_ai_prediction.py
+```
+
+或直接手动编辑 `data/ai_predictions.json`（双色球）/ `data/sport_lottery_ai_predictions.json`（大乐透）。
 
 ### 3. 部署更新
 
@@ -174,12 +189,13 @@ git push origin main
 
 部署后测试以下功能：
 
-- ✅ 页面加载正常
+- ✅ 页面加载正常（双色球 & 大乐透）
 - ✅ 主题切换工作
 - ✅ Tab 切换正常
-- ✅ 数据加载成功
+- ✅ 双色球数据加载成功
+- ✅ 大乐透数据加载成功
 - ✅ 响应式布局在移动端正常
-- ✅ 预测命中计算正确
+- ✅ 预测命中计算正确（双色球 6+1 / 大乐透 5+2）
 
 ---
 
@@ -239,4 +255,4 @@ git push origin main
 - `https://your-project.vercel.app`
 - 或者你的自定义域名
 
-享受你的现代化双色球数据展示系统！✨
+享受你的现代化双色球 & 大乐透数据展示系统！✨

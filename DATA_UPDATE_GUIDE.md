@@ -1,10 +1,12 @@
 # 数据更新指南
 
-本文档说明如何更新双色球数据系统的各类数据。
+本文档说明如何更新双色球和大乐透数据系统的各类数据。
 
 ## 📊 数据文件说明
 
-### 1. 历史开奖数据
+### 双色球数据
+
+#### 1. 历史开奖数据
 - **位置**: `data/lottery_history.json`
 - **格式**: 包含 `last_updated`、`data` 数组和 `next_draw` 对象
 - **用途**: 网页显示历史开奖记录和下期开奖信息
@@ -31,15 +33,56 @@
 }
 ```
 
-### 2. 当前 AI 预测数据
+#### 2. 当前 AI 预测数据
 - **位置**: `data/ai_predictions.json`
 - **格式**: 包含 `prediction_date`, `target_period`, `models` 数组
 - **用途**: 网页显示最新AI预测（未开奖期号）
 
-### 3. 历史预测对比数据
+#### 3. 历史预测对比数据
 - **位置**: `data/predictions_history.json`
 - **格式**: 包含 `predictions_history` 数组，每个记录包含预测和实际结果
 - **用途**: 网页显示历史预测准确率对比
+
+### 大乐透数据
+
+#### 1. 历史开奖数据
+- **位置**: `data/sports_lottery_data.json`
+- **格式**: 包含 `last_updated`、`data` 数组和 `next_draw` 对象
+- **用途**: 网页显示大乐透历史开奖记录和下期开奖信息
+
+**数据结构**:
+```json
+{
+  "last_updated": "2025-10-22T20:39:53Z",
+  "data": [
+    {
+      "period": "25121",
+      "date": "2025-10-20",
+      "red_balls": ["03", "11", "18", "25", "33"],
+      "blue_balls": ["04", "10"]
+    }
+  ],
+  "next_draw": {
+    "next_period": "25122",
+    "next_date": "2025-10-22",
+    "next_date_display": "2025年10月22日",
+    "weekday": "周三",
+    "draw_time": "21:25"
+  }
+}
+```
+
+> 注意：大乐透使用 `blue_balls`（数组，2 个后区号码），双色球使用 `blue_ball`（单个蓝球）。
+
+#### 2. 当前 AI 预测数据
+- **位置**: `data/sport_lottery_ai_predictions.json`
+- **格式**: 包含 `prediction_date`, `target_period`, `models` 数组
+- **用途**: 网页显示最新大乐透 AI 预测（未开奖期号）
+
+#### 3. 历史预测对比数据
+- **位置**: `data/sport_lottery_predictions_history.json`
+- **格式**: 包含 `predictions_history` 数组，每个记录包含预测和实际结果
+- **用途**: 网页显示大乐透历史预测准确率对比
 
 ---
 
@@ -51,15 +94,22 @@
 
 项目已配置 GitHub Actions 自动化工作流，**无需手动操作**：
 
+**双色球**:
 - ⏰ **自动触发**: 每天北京时间 22:00 自动运行
 - 🤖 **自动抓取**: 从 500 彩票网获取最新数据
+- 📦 **自动提交**: 检测到新数据时自动提交到仓库
+- 🚀 **自动部署**: Vercel 监听仓库变更自动重新部署
+
+**大乐透**:
+- ⏰ **自动触发**: 每天北京时间 22:30 自动运行
+- 🤖 **自动抓取**: 从 500 彩票网获取最新大乐透数据
 - 📦 **自动提交**: 检测到新数据时自动提交到仓库
 - 🚀 **自动部署**: Vercel 监听仓库变更自动重新部署
 
 **手动触发**（如需立即更新）：
 1. 访问 GitHub 仓库
 2. 进入 **Actions** 标签页
-3. 选择 **Update Lottery Data** 工作流
+3. 选择 **Update Lottery Data**（双色球）或 **Update Sport Lottery Data**（大乐透）工作流
 4. 点击 **Run workflow** 按钮
 
 **查看运行日志**：
@@ -69,25 +119,29 @@
 
 #### 方法二：本地使用爬虫脚本
 
+**双色球**:
 ```bash
 cd fetch_history
 python3 fetch_lottery_history.py
+```
+
+**大乐透**:
+```bash
+cd fetch_history
+python3 fetch_sports_lottery_history.py
 ```
 
 **脚本会自动**:
 - ✅ 从 500 彩票网爬取最新数据
 - ✅ 与现有数据合并去重
 - ✅ 创建备份文件（带时间戳）
-- ✅ 保存到 `lottery_data.json`
-- ✅ **自动同步到** `../data/lottery_history.json`
+- ✅ 保存到本地 JSON 文件
+- ✅ **自动同步到** `data/` 目录对应文件
 - ✅ **自动计算下期开奖信息**（期号、日期、星期）
 
 #### 方法三：手动更新
 
-1. 编辑 `data/lottery_history.json`
-2. 更新 `last_updated` 时间戳
-3. 在 `data` 数组开头添加新期号
-
+**双色球** — 编辑 `data/lottery_history.json`：
 ```json
 {
   "last_updated": "2025-10-22T10:00:00Z",
@@ -97,8 +151,22 @@ python3 fetch_lottery_history.py
       "date": "2025-10-22",
       "red_balls": ["01", "05", "12", "20", "28", "31"],
       "blue_ball": "09"
-    },
-    // ... 其他历史数据
+    }
+  ]
+}
+```
+
+**大乐透** — 编辑 `data/sports_lottery_data.json`：
+```json
+{
+  "last_updated": "2025-10-22T10:00:00Z",
+  "data": [
+    {
+      "period": "25122",
+      "date": "2025-10-22",
+      "red_balls": ["03", "11", "18", "25", "33"],
+      "blue_balls": ["04", "10"]
+    }
   ]
 }
 ```
@@ -107,7 +175,23 @@ python3 fetch_lottery_history.py
 
 ### 步骤 2: 处理已开奖的预测
 
-当 `ai_predictions.json` 中的 `target_period` 已经开奖后：
+当预测文件中的 `target_period` 已经开奖后，需要将预测归档到历史记录。
+
+> 如果使用 GitHub Actions 自动生成预测，归档操作会在下次生成时**自动完成**，无需手动处理。
+
+#### 手动归档（双色球）
+
+对应文件：
+- 当前预测：`data/ai_predictions.json`
+- 历史记录：`data/predictions_history.json`
+- 开奖数据：`data/lottery_history.json`
+
+#### 手动归档（大乐透）
+
+对应文件：
+- 当前预测：`data/sport_lottery_ai_predictions.json`
+- 历史记录：`data/sport_lottery_predictions_history.json`
+- 开奖数据：`data/sports_lottery_data.json`
 
 #### 2.1 将预测移至历史记录
 
@@ -134,6 +218,7 @@ python3 fetch_lottery_history.py
 
 为每个预测组添加 `hit_result`:
 
+**双色球**:
 ```json
 {
   "group_id": 1,
@@ -142,13 +227,33 @@ python3 fetch_lottery_history.py
   "blue_ball": "02",
   "description": "...",
   "hit_result": {
-    "red_hits": ["05", "31"],        // 命中的红球
-    "red_hit_count": 2,              // 红球命中数
-    "blue_hit": false,               // 蓝球是否命中
-    "total_hits": 2                  // 总命中数
+    "red_hits": ["05", "31"],
+    "red_hit_count": 2,
+    "blue_hit": false,
+    "total_hits": 2
   }
 }
 ```
+
+**大乐透**:
+```json
+{
+  "group_id": 1,
+  "strategy": "增强型热号追随者",
+  "red_balls": ["03", "11", "18", "25", "33"],
+  "blue_balls": ["04", "10"],
+  "description": "...",
+  "hit_result": {
+    "red_hits": ["11", "25"],
+    "red_hit_count": 2,
+    "blue_hits": ["04"],
+    "blue_hit_count": 1,
+    "total_hits": 3
+  }
+}
+```
+
+> 注意：双色球命中结果使用 `blue_hit`（布尔值），大乐透使用 `blue_hits`（数组）和 `blue_hit_count`（数字）。
 
 #### 2.3 标记最佳预测组
 
@@ -265,10 +370,19 @@ if __name__ == '__main__':
 
 每次更新数据后，请检查：
 
+### 双色球
 - [ ] `lottery_history.json` 包含最新开奖数据
 - [ ] `ai_predictions.json` 的 `target_period` 是未开奖期号
 - [ ] 如果有新开奖期号，已将旧预测移至 `predictions_history.json`
 - [ ] 历史预测中已计算 `hit_result`
+- [ ] 每个模型标记了 `best_group`
+- [ ] 更新了 `last_updated` 时间戳
+
+### 大乐透
+- [ ] `sports_lottery_data.json` 包含最新开奖数据
+- [ ] `sport_lottery_ai_predictions.json` 的 `target_period` 是未开奖期号
+- [ ] 如果有新开奖期号，已将旧预测移至 `sport_lottery_predictions_history.json`
+- [ ] 历史预测中已计算 `hit_result`（含 `blue_hits` / `blue_hit_count`）
 - [ ] 每个模型标记了 `best_group`
 - [ ] 更新了 `last_updated` 时间戳
 
@@ -297,36 +411,66 @@ vercel --prod
 
 ## 💡 提示
 
-1. **自动化优先**: GitHub Actions 已配置自动更新，推荐直接使用
-2. **手动触发**: 需要立即更新时，可在 GitHub Actions 页面手动运行工作流
+1. **自动化优先**: GitHub Actions 已配置双色球和大乐透的自动更新，推荐直接使用
+2. **手动触发**: 需要立即更新时，可在 GitHub Actions 页面手动运行对应工作流
 3. **备份重要**: 爬虫脚本会自动创建备份，手动更新前也建议备份
 4. **数据验证**: 更新后在本地测试（`./start_server.sh`）
 5. **期号格式**: 确保期号格式一致（如 "25122"）
 6. **日期格式**: 使用 ISO 8601 格式（`2025-10-22T10:00:00Z`）
 7. **JSON 格式**: 使用在线工具验证 JSON 格式正确性
+8. **字段差异**: 双色球使用 `blue_ball`（单值），大乐透使用 `blue_balls`（数组）
 
 ---
 
 ## ⚙️ GitHub Actions 配置说明
 
-### 工作流文件位置
-`.github/workflows/update-lottery-data.yml`
+### 工作流文件
+
+| 工作流 | 文件 | 说明 |
+|--------|------|------|
+| Update Lottery Data | `.github/workflows/update-lottery-data.yml` | 双色球数据自动更新 |
+| Generate AI Prediction | `.github/workflows/generate-ai-prediction.yml` | 双色球 AI 预测自动生成 |
+| Update Sport Lottery Data | `.github/workflows/update-sport-lottery-data.yml` | 大乐透数据自动更新 |
+| Generate Sport Lottery AI Prediction | `.github/workflows/generate-sport-lottery-ai-prediction.yml` | 大乐透 AI 预测自动生成 |
 
 ### 定时任务配置
+
+**双色球**:
 ```yaml
+# 数据更新：每天 UTC 14:00 = 北京时间 22:00
 schedule:
-  - cron: '0 14 * * *'  # UTC 14:00 = 北京时间 22:00
+  - cron: '0 14 * * *'
+
+# AI 预测：每周一/三/五 UTC 00:00 = 北京时间 08:00
+schedule:
+  - cron: '0 0 * * 1,3,5'
 ```
 
+**大乐透**:
+```yaml
+# 数据更新：每天 UTC 14:30 = 北京时间 22:30
+schedule:
+  - cron: '30 14 * * *'
+
+# AI 预测：每周二/四/日 UTC 00:00 = 北京时间 08:00
+schedule:
+  - cron: '0 0 * * 0,2,4'
+```
+
+> 大乐透开奖时间为每周一、三、六 21:25，AI 预测在开奖后次日（周二、四、日）自动生成。
+
 ### 修改运行时间
-编辑 cron 表达式以更改运行时间：
-- `0 14 * * *` - 每天 UTC 14:00（北京时间 22:00）
-- `0 2,14 * * *` - 每天 UTC 02:00 和 14:00（北京时间 10:00 和 22:00）
-- `0 */6 * * *` - 每 6 小时运行一次
+编辑 cron 表达式以更改运行时间（以下为常用示例）：
+- `0 14 * * *` — 每天 UTC 14:00（北京时间 22:00）
+- `0 2,14 * * *` — 每天 UTC 02:00 和 14:00（北京时间 10:00 和 22:00）
+- `0 */6 * * *` — 每 6 小时运行一次
 
 ### 依赖的 Python 包
-- `requests` - HTTP 请求
-- `beautifulsoup4` - HTML 解析
+
+| 工作流 | 依赖 |
+|--------|------|
+| 数据更新（双色球 & 大乐透） | `requests`, `beautifulsoup4` |
+| AI 预测生成（双色球 & 大乐透） | `openai` |
 
 ### 权限说明
 工作流使用 `GITHUB_TOKEN` 自动提交更改，无需额外配置 secrets。

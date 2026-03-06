@@ -1,20 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-双色球历史开奖数据获取脚本
-
-功能：
-1. 从 500 彩票网爬取双色球历史开奖数据
-2. 支持指定爬取期数范围
-3. 自动保存为 JSON 格式，方便后续使用
-4. 包含错误处理和重试机制
-
-使用方法：
-    python3 fetch_lottery_history.py
-    
-输出：
-    sports_lottery_data.json - 包含所有开奖数据的 JSON 文件
-"""
 
 import requests
 from bs4 import BeautifulSoup
@@ -26,14 +11,15 @@ from datetime import datetime, timedelta
 
 
 class LotteryDataFetcher:
-    """双色球数据获取器"""
+    """大乐透数据获取器"""
     
     def __init__(self):
-        self.base_url = "https://datachart.500.com/dlt/history/history.shtml"
+        self.base_url = "https://datachart.500.com/dlt/history/newinc/history.php"
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'Referer': 'https://datachart.500.com/dlt/history/history.shtml',
         }
         self.session = requests.Session()
         self.session.headers.update(self.headers)
@@ -52,8 +38,9 @@ class LotteryDataFetcher:
         for attempt in range(retry):
             try:
                 print(f"正在获取数据... (尝试 {attempt + 1}/{retry})")
-                response = self.session.get(url, timeout=10)
-                response.encoding = 'gb2312'  # 500彩票网使用 gb2312 编码
+                print(f"  URL: {url}")
+                response = self.session.get(url, timeout=30)
+                response.encoding = 'utf-8'
                 
                 if response.status_code == 200:
                     return BeautifulSoup(response.text, 'html.parser')
@@ -119,6 +106,7 @@ class LotteryDataFetcher:
                     lottery_item = {
                         "period": period,
                         "red_balls": red_balls,
+                        "blue_balls": blue_ball,
                         "blue_ball": blue_ball,
                         "date": date
                     }
@@ -207,7 +195,7 @@ class LotteryDataFetcher:
         """
         预测下一期开奖信息
 
-        双色球开奖规律：每周二、四、日开奖（晚上21:15）
+        大乐透开奖规律：每周一、三、六开奖
 
         Args:
             latest_period: 最新期号
@@ -221,7 +209,6 @@ class LotteryDataFetcher:
             period_num = int(latest_period)
             last_draw_date = datetime.strptime(latest_date, '%Y-%m-%d')
 
-            # 双色球开奖日：周二(1), 周四(3), 周日(6)
             draw_weekdays = [0, 2, 5]
 
             # 从最新开奖日期的下一天开始查找
@@ -247,7 +234,7 @@ class LotteryDataFetcher:
                 'next_date': next_date_str,
                 'next_date_display': next_date_display,
                 'weekday': weekday,
-                'draw_time': '21:15'
+                'draw_time': '21:25'
             }
 
         except Exception as e:
@@ -321,20 +308,31 @@ class LotteryDataFetcher:
         except Exception as e:
             print(f"保存文件时出错: {e}")
     
-    def fetch_and_save(self, output_file="sports_lottery_data.json", preserve_history=True):
+    def fetch_and_save(self, output_file="sports_lottery_data.json", preserve_history=True, start=None, end=None):
         """
         获取并保存数据的主函数
 
         Args:
             output_file: 输出文件名
             preserve_history: 是否保留并合并历史数据
+            start: 起始期号（如 "24001"），不传则使用默认
+            end: 结束期号（如 "26022"），不传则使用默认
         """
         print("=" * 50)
-        print("双色球历史开奖数据获取工具")
+        print("大乐透历史开奖数据获取工具")
         print("=" * 50)
 
+        url = self.base_url
+        params = []
+        if start:
+            params.append(f"start={start}")
+        if end:
+            params.append(f"end={end}")
+        if params:
+            url = f"{url}?{'&'.join(params)}"
+
         # 获取网页
-        soup = self.fetch_page(self.base_url)
+        soup = self.fetch_page(url)
 
         if not soup:
             print("获取网页失败，请检查网络连接或稍后重试")
@@ -352,7 +350,7 @@ class LotteryDataFetcher:
         print("-" * 50)
         for item in lottery_data[:5]:
             red_str = " ".join(item['red_balls'])
-            blue_str = " ".join(item['blue_ball'])
+            blue_str = " ".join(item['blue_balls'])
             print(f"期号: {item['period']} | 红球: {red_str} | 蓝球: {blue_str} | 日期: {item['date']}")
 
         # 保存数据
@@ -362,16 +360,26 @@ class LotteryDataFetcher:
 
 
 def main():
-    """主函数"""
     fetcher = LotteryDataFetcher()
     
-    # 可以自定义输出文件名
     output_file = "sports_lottery_data.json"
+    start = None
+    end = None
     
-    if len(sys.argv) > 1:
-        output_file = sys.argv[1]
+    args = sys.argv[1:]
+    i = 0
+    while i < len(args):
+        if args[i] == '--start' and i + 1 < len(args):
+            start = args[i + 1]
+            i += 2
+        elif args[i] == '--end' and i + 1 < len(args):
+            end = args[i + 1]
+            i += 2
+        else:
+            output_file = args[i]
+            i += 1
     
-    success = fetcher.fetch_and_save(output_file)
+    success = fetcher.fetch_and_save(output_file, start=start, end=end)
     
     if success:
         print("\n✓ 数据获取完成！")

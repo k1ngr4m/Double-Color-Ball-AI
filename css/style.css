@@ -270,6 +270,25 @@ body::after {
     color: var(--slate-700);
 }
 
+.nav-page-link {
+    color: var(--slate-500);
+    text-decoration: none;
+}
+
+.nav-page-link:hover {
+    text-decoration: none;
+}
+
+.nav-page-link.active-page {
+    background: linear-gradient(135deg, var(--red-600), var(--blue-700));
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+}
+
+.nav-page-link.active-page:hover {
+    color: white;
+}
+
 @media (min-width: 768px) {
     .nav-items {
         display: flex;

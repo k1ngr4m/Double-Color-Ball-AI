@@ -2,7 +2,14 @@
 
 ## 功能说明
 
-`generate_ai_prediction.py` 脚本可以自动调用多个 AI 模型生成双色球预测数据，并保存到 `data/ai_predictions.json`。
+本项目提供两个 AI 预测自动生成脚本：
+
+| 脚本 | 彩种 | 输出文件 |
+|------|------|----------|
+| `generate_ai_prediction.py` | 双色球（6+1） | `data/ai_predictions.json` |
+| `sport_lottery_generate_ai_prediction.py` | 大乐透（5+2） | `data/sport_lottery_ai_predictions.json` |
+
+两个脚本均可自动调用多个 AI 模型生成预测数据，并在生成新预测前自动归档已开奖的旧预测。
 
 ## 前置要求
 
@@ -27,23 +34,31 @@ export AI_BASE_URL="https://aihubmix.com/v1"  # 可选，有默认值
 
 ### 运行脚本
 
+**双色球**:
 ```bash
 python3 generate_ai_prediction.py
 ```
 
+**大乐透**:
+```bash
+python3 sport_lottery_generate_ai_prediction.py
+```
+
 ### 执行流程
 
-脚本会自动完成以下步骤：
+两个脚本的执行流程一致：
 
-1. **加载历史数据** - 从 `data/lottery_history.json` 读取最近 30 期开奖数据
-2. **获取下期信息** - 从 `next_draw` 字段获取预测目标期号和日期
-3. **调用 AI 模型** - 逐个调用配置的 AI 模型生成预测
-4. **验证预测数据** - 检查返回的 JSON 格式是否正确
-5. **创建备份** - 备份现有的 `ai_predictions.json`
-6. **保存预测** - 将新预测保存到 `data/ai_predictions.json`
+1. **归档旧预测** - 如果旧预测的目标期号已开奖，自动归档到历史记录并计算命中结果
+2. **加载历史数据** - 读取最近 30 期开奖数据
+3. **获取下期信息** - 从 `next_draw` 字段获取预测目标期号和日期
+4. **调用 AI 模型** - 逐个调用配置的 AI 模型生成预测
+5. **验证预测数据** - 检查返回的 JSON 格式是否正确（双色球 6+1 / 大乐透 5+2）
+6. **创建备份** - 备份现有预测文件
+7. **保存预测** - 将新预测保存到对应的 JSON 文件
 
 ### 输出示例
 
+**双色球**:
 ```
 ==================================================
 🤖 双色球 AI 预测自动生成
@@ -52,38 +67,25 @@ python3 generate_ai_prediction.py
 📊 加载历史开奖数据...
 🎯 目标期号: 25124
 📅 开奖日期: 2025年10月28日
-📝 历史数据: 最近 33 期
-
-🔮 开始生成预测...
-
-  ⏳ 正在调用 GPT-5 模型...
-  ✅ GPT-5 预测成功
-  ✓ 验证通过
-
-  ⏳ 正在调用 Claude 4.5 模型...
-  ✅ Claude 4.5 预测成功
-  ✓ 验证通过
-
-  ⏳ 正在调用 Gemini 2.5 模型...
-  ✅ Gemini 2.5 预测成功
-  ✓ 验证通过
-
-  ⏳ 正在调用 DeepSeek R1 模型...
-  ✅ DeepSeek R1 预测成功
-  ✓ 验证通过
-
-✅ 成功生成 4/4 个模型的预测
-
-💾 保存预测数据...
-  ✓ 已创建备份: ai_predictions_backup_20251027_152701.json
-  ✓ 已保存到: data/ai_predictions.json
-
-==================================================
+...
 🎉 预测生成完成！
+```
+
+**大乐透**:
+```
 ==================================================
+🤖 大乐透 AI 预测自动生成
+==================================================
+
+🎯 目标期号: 25124
+📅 开奖日期: 2025年10月27日
+...
+🎉 大乐透预测生成完成！
 ```
 
 ## 生成的数据格式
+
+### 双色球（6 红球 + 1 蓝球）
 
 ```json
 {
@@ -103,10 +105,34 @@ python3 generate_ai_prediction.py
           "blue_ball": "13",
           "description": "选择最近高频号码，排除上一期号码"
         }
-        // ... 共 5 组预测
       ]
     }
-    // ... 共 4 个模型
+  ]
+}
+```
+
+### 大乐透（5 前区 + 2 后区）
+
+```json
+{
+  "prediction_date": "2025-10-27",
+  "target_period": "25124",
+  "models": [
+    {
+      "prediction_date": "2025-10-27",
+      "target_period": "25124",
+      "model_id": "DLT-Team-001",
+      "model_name": "GPT-5",
+      "predictions": [
+        {
+          "group_id": 1,
+          "strategy": "增强型热号追随者",
+          "red_balls": ["03", "11", "18", "25", "33"],
+          "blue_balls": ["04", "10"],
+          "description": "聚焦近期高频前区号，区间分布合理；后区选择近20期活跃号码。"
+        }
+      ]
+    }
   ]
 }
 ```
@@ -125,11 +151,20 @@ python3 generate_ai_prediction.py
 
 脚本会自动验证生成的预测数据：
 
+### 双色球
 - ✓ 必需字段完整性（prediction_date, target_period, model_id, model_name, predictions）
 - ✓ 预测组数量正确（5 组）
 - ✓ 红球数量正确（6 个）
 - ✓ 红球号码已排序
 - ✓ 蓝球不为空
+
+### 大乐透
+- ✓ 必需字段完整性（prediction_date, target_period, model_id, model_name, predictions）
+- ✓ 预测组数量正确（5 组）
+- ✓ 前区数量正确（5 个，范围 01-35）
+- ✓ 前区号码已排序
+- ✓ 后区数量正确（2 个，范围 01-12）
+- ✓ 后区号码已排序
 
 ## 注意事项
 
@@ -167,68 +202,49 @@ MODELS = [
 
 ## 与现有工作流集成
 
-### 自动化流程建议
+### GitHub Actions 自动化（已配置）
 
-1. **自动更新历史数据**
-   ```bash
-   cd fetch_history
-   python3 fetch_lottery_history.py
-   ```
+项目已配置 4 个 GitHub Actions 工作流，实现全自动化：
 
-2. **生成新预测**
-   ```bash
-   python3 generate_ai_prediction.py
-   ```
+| 工作流 | 文件 | 触发时间 |
+|--------|------|----------|
+| Update Lottery Data | `update-lottery-data.yml` | 每天 22:00 (北京时间) |
+| Generate AI Prediction | `generate-ai-prediction.yml` | 每周一/三/五 08:00 (北京时间) |
+| Update Sport Lottery Data | `update-sport-lottery-data.yml` | 每天 22:30 (北京时间) |
+| Generate Sport Lottery AI Prediction | `generate-sport-lottery-ai-prediction.yml` | 每周二/四/日 08:00 (北京时间) |
 
-3. **提交更改**
-   ```bash
-   git add data/lottery_history.json data/ai_predictions.json
-   git commit -m "chore: update lottery data and AI predictions"
-   git push
-   ```
+所有工作流均支持手动触发（Actions 页面 > Run workflow）。
 
-### GitHub Actions 集成示例
+### 手动自动化流程
 
-```yaml
-name: Update Predictions
+如需在本地手动执行完整流程：
 
-on:
-  schedule:
-    - cron: '0 15 * * 0,2,4'  # 周日、周二、周四 23:00 北京时间
+**双色球**:
+```bash
+# 1. 更新历史数据
+cd fetch_history && python3 fetch_lottery_history.py && cd ..
 
-jobs:
-  update:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+# 2. 生成新预测
+python3 generate_ai_prediction.py
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
+# 3. 提交更改
+git add data/lottery_history.json data/ai_predictions.json data/predictions_history.json
+git commit -m "chore: update SSQ lottery data and AI predictions"
+git push
+```
 
-      - name: Install dependencies
-        run: |
-          pip install requests beautifulsoup4 openai
+**大乐透**:
+```bash
+# 1. 更新历史数据
+cd fetch_history && python3 fetch_sports_lottery_history.py && cd ..
 
-      - name: Update lottery history
-        run: |
-          cd fetch_history
-          python3 fetch_lottery_history.py
+# 2. 生成新预测
+python3 sport_lottery_generate_ai_prediction.py
 
-      - name: Generate AI predictions
-        run: python3 generate_ai_prediction.py
-        env:
-          AI_API_KEY: ${{ secrets.AI_API_KEY }}
-          AI_BASE_URL: ${{ secrets.AI_BASE_URL }}
-
-      - name: Commit changes
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add data/
-          git commit -m "chore: auto-update predictions" || exit 0
-          git push
+# 3. 提交更改
+git add data/sports_lottery_data.json data/sport_lottery_ai_predictions.json data/sport_lottery_predictions_history.json
+git commit -m "chore: update DLT lottery data and AI predictions"
+git push
 ```
 
 ## 故障排查
@@ -262,10 +278,19 @@ jobs:
 
 ## 相关文件
 
-- `generate_ai_prediction.py` - 主脚本
-- `doc/prompt.md` - Prompt 模板文档
-- `data/lottery_history.json` - 历史开奖数据（输入）
-- `data/ai_predictions.json` - AI 预测数据（输出）
+### 双色球
+- `generate_ai_prediction.py` — 预测生成脚本
+- `doc/prompt2.0.md` — Prompt 模板
+- `data/lottery_history.json` — 历史开奖数据（输入）
+- `data/ai_predictions.json` — AI 预测数据（输出）
+- `data/predictions_history.json` — 历史预测归档
+
+### 大乐透
+- `sport_lottery_generate_ai_prediction.py` — 预测生成脚本
+- `doc/sport_lottery_prompt2.0.md` — Prompt 模板
+- `data/sports_lottery_data.json` — 历史开奖数据（输入）
+- `data/sport_lottery_ai_predictions.json` — AI 预测数据（输出）
+- `data/sport_lottery_predictions_history.json` — 历史预测归档
 
 ## 许可证
 

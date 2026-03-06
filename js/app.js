@@ -623,13 +623,13 @@ function renderAllAnalysisCharts() {
 // 设置事件监听
 function setupEventListeners() {
     // Tab切换 - 桌面端
-    const navItems = document.querySelectorAll('.nav-item');
+    const navItems = document.querySelectorAll('.nav-item[data-tab]');
     navItems.forEach(item => {
         item.addEventListener('click', () => handleTabSwitch(item.dataset.tab, navItems));
     });
 
     // Tab切换 - 移动端
-    const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+    const mobileNavItems = document.querySelectorAll('.mobile-nav-item[data-tab]');
     mobileNavItems.forEach(item => {
         item.addEventListener('click', () => handleTabSwitch(item.dataset.tab, mobileNavItems));
     });
