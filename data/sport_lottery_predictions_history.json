@@ -2,6 +2,162 @@
   "历史预测记录": "本文件保存已开奖期号的大乐透 AI 预测数据，用于对比和统计",
   "predictions_history": [
     {
+      "prediction_date": "2026-03-10",
+      "target_period": "26025",
+      "actual_result": {
+        "period": "26025",
+        "red_balls": [
+          "03",
+          "15",
+          "24",
+          "28",
+          "29"
+        ],
+        "blue_balls": [
+          "03",
+          "07"
+        ],
+        "blue_ball": "03",
+        "date": "2026-03-11"
+      },
+      "models": [
+        {
+          "model_id": "dlt_gpt_4.1",
+          "model_name": "GPT-4.1",
+          "predictions": [
+            {
+              "group_id": 1,
+              "strategy": "增强型热号追随者",
+              "red_balls": [
+                "05",
+                "09",
+                "10",
+                "21",
+                "26"
+              ],
+              "blue_balls": [
+                "01",
+                "12"
+              ],
+              "description": "前区取加权频率高、分布为01-12:1,13-24:1,25-35:3，后区选近20期最热活跃号。",
+              "blue_ball": "01",
+              "hit_result": {
+                "red_hits": [],
+                "red_hit_count": 0,
+                "blue_hits": [],
+                "blue_hit_count": 0,
+                "total_hits": 0
+              }
+            },
+            {
+              "group_id": 2,
+              "strategy": "增强型冷号逆向者",
+              "red_balls": [
+                "06",
+                "15",
+                "16",
+                "32",
+                "35"
+              ],
+              "blue_balls": [
+                "06",
+                "09"
+              ],
+              "description": "前区优选遗漏8期以上号码，奇偶2:3、大小3:2，后区挑选遗漏5-7期号码。",
+              "blue_ball": "06",
+              "hit_result": {
+                "red_hits": [
+                  "15"
+                ],
+                "red_hit_count": 1,
+                "blue_hits": [],
+                "blue_hit_count": 0,
+                "total_hits": 1
+              }
+            },
+            {
+              "group_id": 3,
+              "strategy": "增强型平衡策略师",
+              "red_balls": [
+                "04",
+                "13",
+                "18",
+                "23",
+                "27"
+              ],
+              "blue_balls": [
+                "05",
+                "11"
+              ],
+              "description": "前区选中频号，奇偶3:2、和值85，含1组连号，后区跨度6，均衡搭配。",
+              "blue_ball": "05",
+              "hit_result": {
+                "red_hits": [],
+                "red_hit_count": 0,
+                "blue_hits": [],
+                "blue_hit_count": 0,
+                "total_hits": 0
+              }
+            },
+            {
+              "group_id": 4,
+              "strategy": "增强型周期理论家",
+              "red_balls": [
+                "01",
+                "08",
+                "17",
+                "23",
+                "29"
+              ],
+              "blue_balls": [
+                "03",
+                "10"
+              ],
+              "description": "前区选趋势分上升及转折号，01与17回补，后区遗漏接近均值。",
+              "blue_ball": "03",
+              "hit_result": {
+                "red_hits": [
+                  "29"
+                ],
+                "red_hit_count": 1,
+                "blue_hits": [
+                  "03"
+                ],
+                "blue_hit_count": 1,
+                "total_hits": 2
+              }
+            },
+            {
+              "group_id": 5,
+              "strategy": "增强型综合决策者",
+              "red_balls": [
+                "05",
+                "13",
+                "21",
+                "26",
+                "31"
+              ],
+              "blue_balls": [
+                "01",
+                "08"
+              ],
+              "description": "前区综合分高，区间广，热冷均衡，后区为高分中频组合。",
+              "blue_ball": "01",
+              "hit_result": {
+                "red_hits": [],
+                "red_hit_count": 0,
+                "blue_hits": [],
+                "blue_hit_count": 0,
+                "total_hits": 0
+              }
+            }
+          ],
+          "best_group": 4,
+          "best_hit_count": 2
+        }
+      ]
+    },
+    {
       "prediction_date": "2026-03-08",
       "target_period": "26024",
       "actual_result": {
