@@ -2,6 +2,300 @@
   "历史预测记录": "本文件保存已开奖期号的大乐透 AI 预测数据，用于对比和统计",
   "predictions_history": [
     {
+      "prediction_date": "2026-05-07",
+      "target_period": "26050",
+      "actual_result": {
+        "period": "26050",
+        "red_balls": [
+          "06",
+          "10",
+          "14",
+          "23",
+          "33"
+        ],
+        "blue_balls": [
+          "08",
+          "10"
+        ],
+        "blue_ball": "08",
+        "date": "2026-05-09"
+      },
+      "models": [
+        {
+          "model_id": "dlt_gpt_4.1",
+          "model_name": "GPT-4.1",
+          "predictions": [
+            {
+              "group_id": 1,
+              "strategy": "增强型热号追随者",
+              "red_balls": [
+                "01",
+                "17",
+                "21",
+                "26",
+                "33"
+              ],
+              "blue_balls": [
+                "01",
+                "07"
+              ],
+              "description": "前区选高加权热号，区间覆盖合理；后区为近20期最高频，近期开出。",
+              "blue_ball": "01",
+              "hit_result": {
+                "red_hits": [
+                  "33"
+                ],
+                "red_hit_count": 1,
+                "blue_hits": [],
+                "blue_hit_count": 0,
+                "total_hits": 1
+              }
+            },
+            {
+              "group_id": 2,
+              "strategy": "增强型冷号逆向者",
+              "red_balls": [
+                "04",
+                "05",
+                "16",
+                "18",
+                "32"
+              ],
+              "blue_balls": [
+                "05",
+                "09"
+              ],
+              "description": "前区选高遗漏潜力号，尾数覆盖丰富，奇偶3:2，大小2:3；后区选遗漏回补。",
+              "blue_ball": "05",
+              "hit_result": {
+                "red_hits": [],
+                "red_hit_count": 0,
+                "blue_hits": [],
+                "blue_hit_count": 0,
+                "total_hits": 0
+              }
+            },
+            {
+              "group_id": 3,
+              "strategy": "增强型平衡策略师",
+              "red_balls": [
+                "09",
+                "13",
+                "22",
+                "28",
+                "35"
+              ],
+              "blue_balls": [
+                "06",
+                "10"
+              ],
+              "description": "前区选中频、控制奇偶比3:2和值89，单对连号；后区跨度4，均衡搭配。",
+              "blue_ball": "06",
+              "hit_result": {
+                "red_hits": [],
+                "red_hit_count": 0,
+                "blue_hits": [
+                  "10"
+                ],
+                "blue_hit_count": 1,
+                "total_hits": 1
+              }
+            },
+            {
+              "group_id": 4,
+              "strategy": "增强型周期理论家",
+              "red_balls": [
+                "08",
+                "14",
+                "15",
+                "24",
+                "27"
+              ],
+              "blue_balls": [
+                "03",
+                "11"
+              ],
+              "description": "选趋势分大于0且有周期转折号，区间均衡；后区临近平均遗漏期数。",
+              "blue_ball": "03",
+              "hit_result": {
+                "red_hits": [
+                  "14"
+                ],
+                "red_hit_count": 1,
+                "blue_hits": [],
+                "blue_hit_count": 0,
+                "total_hits": 1
+              }
+            },
+            {
+              "group_id": 5,
+              "strategy": "增强型综合决策者",
+              "red_balls": [
+                "12",
+                "19",
+                "20",
+                "25",
+                "34"
+              ],
+              "blue_balls": [
+                "02",
+                "08"
+              ],
+              "description": "综合多策略评分，覆盖2区间，奇偶2:3，热冷均衡，后区高综合得分。",
+              "blue_ball": "02",
+              "hit_result": {
+                "red_hits": [],
+                "red_hit_count": 0,
+                "blue_hits": [
+                  "08"
+                ],
+                "blue_hit_count": 1,
+                "total_hits": 1
+              }
+            }
+          ],
+          "best_group": 1,
+          "best_hit_count": 1
+        },
+        {
+          "model_id": "dlt_ai_v2_quant",
+          "model_name": "Professional Lottery Data Analyzer",
+          "predictions": [
+            {
+              "group_id": 1,
+              "strategy": "增强型热号追随者",
+              "red_balls": [
+                "01",
+                "11",
+                "15",
+                "21",
+                "33"
+              ],
+              "blue_balls": [
+                "07",
+                "08"
+              ],
+              "description": "聚焦近期高频号01、15与33，前中后三区分布为2:2:1，后区锁定近20期最活跃号码。",
+              "blue_ball": "07",
+              "hit_result": {
+                "red_hits": [
+                  "33"
+                ],
+                "red_hit_count": 1,
+                "blue_hits": [
+                  "08"
+                ],
+                "blue_hit_count": 1,
+                "total_hits": 2
+              }
+            },
+            {
+              "group_id": 2,
+              "strategy": "增强型冷号逆向者",
+              "red_balls": [
+                "04",
+                "05",
+                "10",
+                "16",
+                "32"
+              ],
+              "blue_balls": [
+                "09",
+                "12"
+              ],
+              "description": "主攻遗漏超过10期的冷号，奇偶比1:4侧重偶数回补，后区关注遗漏值适中的边缘号码。",
+              "blue_ball": "09",
+              "hit_result": {
+                "red_hits": [
+                  "10"
+                ],
+                "red_hit_count": 1,
+                "blue_hits": [],
+                "blue_hit_count": 0,
+                "total_hits": 1
+              }
+            },
+            {
+              "group_id": 3,
+              "strategy": "增强型平衡策略师",
+              "red_balls": [
+                "03",
+                "09",
+                "18",
+                "22",
+                "27"
+              ],
+              "blue_balls": [
+                "05",
+                "11"
+              ],
+              "description": "选取中频稳定号码，和值设计在80-90区间，奇偶比3:2，后区跨度设定为6以拟合均值。",
+              "blue_ball": "05",
+              "hit_result": {
+                "red_hits": [],
+                "red_hit_count": 0,
+                "blue_hits": [],
+                "blue_hit_count": 0,
+                "total_hits": 0
+              }
+            },
+            {
+              "group_id": 4,
+              "strategy": "增强型周期理论家",
+              "red_balls": [
+                "01",
+                "13",
+                "20",
+                "26",
+                "34"
+              ],
+              "blue_balls": [
+                "02",
+                "10"
+              ],
+              "description": "筛选趋势分显著为正的号码，20与26呈现明显上行趋势，后区选择接近历史平均遗漏的节奏号。",
+              "blue_ball": "02",
+              "hit_result": {
+                "red_hits": [],
+                "red_hit_count": 0,
+                "blue_hits": [
+                  "10"
+                ],
+                "blue_hit_count": 1,
+                "total_hits": 1
+              }
+            },
+            {
+              "group_id": 5,
+              "strategy": "增强型综合决策者",
+              "red_balls": [
+                "08",
+                "15",
+                "21",
+                "26",
+                "29"
+              ],
+              "blue_balls": [
+                "06",
+                "07"
+              ],
+              "description": "综合热度与遗漏权重，保留高分号26并融入中频号，平衡大小比为3:2，后区组合兼顾热度与跨度。",
+              "blue_ball": "06",
+              "hit_result": {
+                "red_hits": [],
+                "red_hit_count": 0,
+                "blue_hits": [],
+                "blue_hit_count": 0,
+                "total_hits": 0
+              }
+            }
+          ],
+          "best_group": 1,
+          "best_hit_count": 2
+        }
+      ]
+    },
+    {
       "prediction_date": "2026-05-05",
       "target_period": "26049",
       "actual_result": {
