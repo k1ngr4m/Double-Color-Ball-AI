@@ -1,6 +1,19 @@
 {
-  "last_updated": "2026-05-20T16:56:41Z",
+  "last_updated": "2026-05-21T16:41:18Z",
   "data": [
+    {
+      "period": "26057",
+      "red_balls": [
+        "01",
+        "10",
+        "22",
+        "24",
+        "28",
+        "30"
+      ],
+      "blue_ball": "07",
+      "date": "2026-05-21"
+    },
     {
       "period": "26056",
       "red_balls": [
@@ -1524,10 +1537,10 @@
     }
   ],
   "next_draw": {
-    "next_period": "26057",
-    "next_date": "2026-05-21",
-    "next_date_display": "2026年05月21日",
-    "weekday": "周四",
+    "next_period": "26058",
+    "next_date": "2026-05-24",
+    "next_date_display": "2026年05月24日",
+    "weekday": "周日",
     "draw_time": "21:15"
   }
 }
