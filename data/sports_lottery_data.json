@@ -1,6 +1,25 @@
 {
-  "last_updated": "2026-07-31T16:16:51Z",
+  "last_updated": "2026-08-01T15:37:23Z",
   "data": [
+    {
+      "period": "26086",
+      "red_balls": [
+        "10",
+        "11",
+        "18",
+        "22",
+        "35"
+      ],
+      "blue_balls": [
+        "06",
+        "12"
+      ],
+      "blue_ball": [
+        "06",
+        "12"
+      ],
+      "date": "2026-08-01"
+    },
     {
       "period": "26085",
       "red_balls": [
@@ -13056,10 +13075,10 @@
     }
   ],
   "next_draw": {
-    "next_period": "26086",
-    "next_date": "2026-08-01",
-    "next_date_display": "2026年08月01日",
-    "weekday": "周六",
+    "next_period": "26087",
+    "next_date": "2026-08-03",
+    "next_date_display": "2026年08月03日",
+    "weekday": "周一",
     "draw_time": "21:25"
   }
 }
